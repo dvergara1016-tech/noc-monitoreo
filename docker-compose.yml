@@ -1,0 +1,39 @@
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana_server
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+
+  flask_app:
+    build: ./flask
+    container_name: flask_web
+    ports:
+      - "443:443"
+      - "80:80"
+    environment:
+      - GRAFANA_URL=http://grafana_server:3000
+      - GRAFANA_TOKEN=${GRAFANA_TOKEN}
+      - ZABBIX_API_URL=${ZABBIX_API_URL}
+      - ZABBIX_API_TOKEN=${ZABBIX_API_TOKEN}
+      - ZABBIX_DS_UID=${ZABBIX_DS_UID}
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      # Opcionales (descomenta para usarlos):
+      # - NOC_NOMBRE=NOC
+      # - NOC_CORS_ORIGEN=https://tu-dominio
+      # - NOC_PUERTOS_OCULTOS=wan2,ha1
+    volumes:
+      - noc_data:/data
+    depends_on:
+      - grafana
+    restart: unless-stopped
+
+volumes:
+  grafana_data:
+  noc_data:

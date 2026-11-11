@@ -1,0 +1,27 @@
+# --- Secretos y configuración local (NUNCA subir) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# --- Datos y copias de seguridad ---
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+*.bak2
+data/
+
+# --- Python ---
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# --- Docker y editores ---
+docker-compose.override.yml
+.vscode/
+.idea/
+*.log
